@@ -9,7 +9,6 @@
       href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css"
     />
     <script src="https://www.recaptcha.net/recaptcha/api.js"></script>
-
   </head>
   <body>
     <div class="container">
@@ -97,18 +96,13 @@
         return isValid;
       }
 
-      document
-        .getElementById("contactForm")
-        .addEventListener("submit", function (event) {
+      document.getElementById("contactForm").addEventListener("submit", function (event) {
           if (!validateForm()) {
             event.preventDefault();
             var formData = new FormData(document.getElementById("contactform"));
             var captchaResponse = formData.get("g-recaptcha-response");
-
             fetch(
-              encodeURI(document.querySelector("input[type=text]").value) +
-                "/" +
-                encodeURI(captchaResponse),
+              encodeURI(captchaResponse),
               { method: "POST" }
             ).then(() => location.reload());
           }
@@ -116,3 +110,4 @@
     </script>
   </body>
 </html>
+
