@@ -1,113 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>reCAPTCHA Form</title>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css"
-    />
-    <script src="https://www.recaptcha.net/recaptcha/api.js"></script>
-  </head>
-  <body>
-    <div class="container">
-      <p>Powered By FormSpree</p>
-      <p>Developed By Rahul Dawpersad</p>
-      <form
-        id="contactForm"
-        action="https://formspree.io/f/xeqygllk"
-        method="post"
-      >
-        <input
-          type="text"
-          id="fullName"
-          name="fullName"
-          placeholder="Full Name"
-        /><span id="fullNameError" style="color: red"></span><br /><br />
-        <input type="email" id="email" name="email" placeholder="Email" /><span
-          id="emailError"
-          style="color: red"
-        ></span
-        ><br /><br />
-        <textarea
-          id="message"
-          name="message"
-          rows="4"
-          placeholder="Message"
-        ></textarea
-        ><span id="messageError" style="color: red"></span><br /><br />
-        <div
-          class="g-recaptcha"
-          data-sitekey="6LeUIIcpAAAAAPJSiddl-lU9cgRB-vCJWzU_peXD"
-        ></div>
-        <span id="recaptchaError" style="color: red"></span><br />
-        <input
-          type="hidden"
-          name="derive_fields"
-          value="imgverify=g-recaptcha-response"
-        />
-        <button type="submit" id="submitBtn">Send</button>
-      </form>
-    </div>
+    <!-- Link to MAIN STYLES -->
+    <link rel="stylesheet" href="public/css/style.module.css">
+    <!-- Link to WATER.CSS -->
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css"> -->
+    <!-- Link to FONT AWESOME -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</head>
+<body>
+<div class="container">
+    <h1>Powered By <span>FormSpree</span></h1>
+    <p>Developed By Rahul Dawpersad</p>
+    <form id="contactForm" class="form" action="https://formspree.io/f/xeqygllk" method="post">
+        <input type="text" id="fullName" name="fullName" placeholder="Full Name"/><span id="fullNameError" style="color: red"></span><br/><br/>
+        <input type="email" id="email" name="email" placeholder="Email"/><span id="emailError" style="color: red"></span><br/><br/>
+        <textarea id="message" name="message" rows="10" cols="52" placeholder="Message"></textarea><span id="messageError" style="color: red"></span><br/><br/>
+            <div class="g-recaptcha" data-sitekey="6LeUIIcpAAAAAPJSiddl-lU9cgRB-vCJWzU_peXD"></div>
+        <span id="recaptchaError" style="color: red"></span><br/>
+        <button type="submit" id="submitBtn" class="btnsend">Send</button>
+    </form>
+</div>
 
-    <script>
-      function validateForm() {
+<script>
+    function validateForm() {
         var fullName = document.getElementById("fullName").value.trim();
         var email = document.getElementById("email").value.trim();
         var message = document.getElementById("message").value.trim();
-        var recaptchaResponse = document
-          .getElementById("g-recaptcha-response")
-          .value.trim();
+        var recaptchaResponse = grecaptcha.getResponse();
         var isValid = true;
 
         if (fullName === "") {
-          document.getElementById("fullNameError").textContent =
-            "Please enter your full name.";
-          isValid = false;
+            document.getElementById("fullNameError").innerHTML =
+                `<div class="error-container">
+                 <span class="material-symbols-outlined">error</span> 
+                 Please enter your full name.
+                 </div>`;
+                  
+            isValid = false;
         } else {
-          document.getElementById("fullNameError").textContent = "";
+            document.getElementById("fullNameError").textContent = "";
         }
 
         if (email === "") {
-          document.getElementById("emailError").textContent =
-            "Please enter your email address.";
-          isValid = false;
+            document.getElementById("emailError").innerHTML =
+            `<div class="error-container">
+                 <span class="material-symbols-outlined">error</span> 
+                 Please enter your Email Address.
+                 </div>`;
+            isValid = false;
         } else {
-          document.getElementById("emailError").textContent = "";
+            document.getElementById("emailError").textContent = "";
         }
 
         if (message === "") {
-          document.getElementById("messageError").textContent =
-            "Please enter your message.";
-          isValid = false;
+            document.getElementById("messageError").innerHTML =
+            `<div class="error-container">
+                 <span class="material-symbols-outlined">error</span> 
+                 Please enter your Message.
+                 </div>`;
+            isValid = false;
         } else {
-          document.getElementById("messageError").textContent = "";
+            document.getElementById("messageError").textContent = "";
         }
 
         if (recaptchaResponse === "") {
-          document.getElementById("recaptchaError").textContent =
-            "Please complete the reCAPTCHA.";
-          isValid = false;
+            document.getElementById("recaptchaError").innerHTML =
+            `<div class="error-container">
+                 <span class="material-symbols-outlined">error</span> 
+                 Please complete the reCAPTCHA.     
+                 </div>`;
+            isValid = false;
         } else {
-          document.getElementById("recaptchaError").textContent = "";
+            document.getElementById("recaptchaError").textContent = "";
         }
 
         return isValid;
-      }
+    }
 
-      document.getElementById("contactForm").addEventListener("submit", function (event) {
-          if (!validateForm()) {
+    document.getElementById("contactForm").addEventListener("submit", function (event) {
+        if (!validateForm()) {
             event.preventDefault();
-            var formData = new FormData(document.getElementById("contactform"));
-            var captchaResponse = formData.get("g-recaptcha-response");
-            fetch(
-              encodeURI(captchaResponse),
-              { method: "POST" }
-            ).then(() => location.reload());
-          }
-        });
-    </script>
-  </body>
+        }
+    });
+</script>
+</body>
 </html>
-
